@@ -2,8 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    width = 320;
-    height = 240;
+    width = 1280;
+    height = 1024;
     
     frame = 0;// init frame value to zero
     bSaveSequence = false;// this one will allow you to save just when you want to and not all the time that the app is running.
@@ -29,16 +29,14 @@ void ofApp::update()
     if (kinect.isFrameNew())
     {
        // colorImg.setFromPixels(kinect.getPixels(), 640, 480);
-        grayImage.setFromPixels(kinect.getDepthPixels(), 640, 480);
+        grayImage.setFromPixels(kinect.getDepthPixels(), kinect.width,kinect.height);
     }
    
     
     if(bSaveSequence){
-        
+        // FALTA q la imagen quede en 1280x1024.
         ofImage img;
-        ofxCvColorImage tmp;
-        tmp = grayImage;
-        img.setFromPixels(tmp.getPixelsRef());
+        img.setFromPixels(grayImage.getPixels(), grayImage.getWidth(), grayImage.getHeight(), OF_IMAGE_GRAYSCALE);
         bSaveSequence=false;
         img.saveImage(ofToString(frame)+".png"); // change the ".jpg" for ".png" if you want a png sequence.
         frame++;
@@ -49,10 +47,10 @@ void ofApp::update()
 void ofApp::draw()
 {
   //  colorImg.draw(20, 20, width, height);
-    grayImage.draw(20, 20, width, height);
-    
-    //record.newFrame(kinect.getPixels(), kinect.getRawDepthPixels()); // ???
-    //record.init("images/depth.mov"); /// ???
+    grayImage.draw(0, 0, width, height);
+    stringstream reportStream;
+    reportStream <<"Presione las flechas para subir o bajar la camara"<<endl<<"Presione f para tener pantalla completa"<<endl<<"Presione s para guardar la imagen"<<endl<<"Presione esc para salir"<< endl;
+    ofDrawBitmapString(reportStream.str(), 20, 652);
 }
 
 
